@@ -1,0 +1,16 @@
+[2026-04-21 20:52:28,054] 19 root - INFO - Starting data ingestion test...
+[2026-04-21 20:52:28,054] 23 root - INFO - Training pipeline config created: house_prediction
+[2026-04-21 20:52:28,054] 27 root - INFO - Data ingestion config created
+[2026-04-21 20:52:28,054] 28 root - INFO - Database: house_prediction
+[2026-04-21 20:52:28,054] 29 root - INFO - Collection: house_data
+[2026-04-21 20:52:28,054] 30 root - INFO - Train/Test split ratio: 0.2
+[2026-04-21 20:52:28,054] 34 root - INFO - Data ingestion component initialized
+[2026-04-21 20:52:28,054] 37 root - INFO - Starting data ingestion from MongoDB...
+[2026-04-21 20:52:39,820] 76 root - INFO - performed train and test split on the data
+[2026-04-21 20:52:39,867] 87 root - INFO - saved the train and test data in the ingested directory
+[2026-04-21 20:52:39,868] 42 root - INFO - ==================================================
+[2026-04-21 20:52:39,868] 43 root - INFO - DATA INGESTION COMPLETED SUCCESSFULLY!
+[2026-04-21 20:52:39,870] 44 root - INFO - ==================================================
+[2026-04-21 20:52:39,870] 45 root - INFO - Train file path: Artifact/2026_04_21_20_52_27/data_ingestion/ingested/train.csv
+[2026-04-21 20:52:39,870] 46 root - INFO - Test file path: Artifact/2026_04_21_20_52_27/data_ingestion/ingested/test.csv
+[2026-04-21 20:52:39,870] 47 root - INFO - ==================================================
