@@ -1,0 +1,30 @@
+columns:
+  - Date mutation: object
+  - Nature mutation: object
+  - Valeur fonciere: float64
+  - Code postal: float64
+  - Commune: object
+  - Code departement: int64
+  - Type local: object
+  - Surface reelle bati: float64
+  - Nombre pieces principales: float64
+  - Surface terrain: float64
+
+numerical_columns:
+  - Valeur fonciere
+  - Code postal
+  - Code departement
+  - Surface reelle bati
+  - Nombre pieces principales
+  - Surface terrain
+
+categorical_columns:
+  - Nature mutation
+  - Commune
+  - Type local
+
+datetime_columns:
+  - Date mutation
+
+target_column:
+  - Valeur fonciere

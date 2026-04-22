@@ -1,0 +1,40 @@
+Code departement:
+  drift_status: true
+  p_value: 1.0
+  same_distribution: true
+Code postal:
+  drift_status: true
+  p_value: 0.7580840579651636
+  same_distribution: true
+Commune:
+  drift_status: true
+  p_value: 0.42498684600100284
+  same_distribution: true
+Date mutation:
+  drift_status: true
+  p_value: 0.8938072251614513
+  same_distribution: true
+Nature mutation:
+  drift_status: true
+  p_value: 1.0
+  same_distribution: true
+Nombre pieces principales:
+  drift_status: true
+  p_value: 0.9996095195933874
+  same_distribution: true
+Surface reelle bati:
+  drift_status: true
+  p_value: 0.8533236015388285
+  same_distribution: true
+Surface terrain:
+  drift_status: true
+  p_value: 0.7322993405433824
+  same_distribution: true
+Type local:
+  drift_status: true
+  p_value: 0.7580840579651636
+  same_distribution: true
+Valeur fonciere:
+  drift_status: true
+  p_value: 0.42498684600100284
+  same_distribution: true
