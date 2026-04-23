@@ -1,12 +1,14 @@
 """
-Main script to test data ingestion and validation pipeline
+Main script to test data ingestion, validation and transformation pipeline
 """
 import sys
-from house_prediction.entity.config_entity import TrainingPipelineConfig, DataIngestionConfig, DataValidationConfig
+from house_prediction.entity.config_entity import TrainingPipelineConfig, DataIngestionConfig, DataValidationConfig, DataTransformationConfig
 from house_prediction.components.data_ingestion import DataIngestion
 from house_prediction.components.data_validation import DataValidation
+from house_prediction.components.data_transformation import DataTransformation
 from house_prediction.logging.logger import logging
 from house_prediction.exception.exception import HousePredictionException
+import numpy as np
 
 def test_data_ingestion():
     """
@@ -111,6 +113,57 @@ def test_data_validation(data_ingestion_artifact):
     except Exception as e:
         raise HousePredictionException(e, sys)
 
+
+def test_data_transformation(data_validation_artifact):
+    """
+    Test the data transformation pipeline:
+    1. Clean data
+    2. Apply feature engineering
+    3. Apply target encoding
+    4. Scale and impute
+    5. Return transformation artifact
+    """
+    try:
+        logging.info("Starting data transformation test...")
+
+        # Step 1: Create training pipeline config
+        training_pipeline_config = TrainingPipelineConfig()
+        logging.info(f"Training pipeline config created: {training_pipeline_config.pipeline_name}")
+
+        # Step 2: Create data transformation config
+        data_transformation_config = DataTransformationConfig(training_pipeline_config)
+        logging.info(f"Data transformation config created")
+
+        # Step 3: Initialize data transformation
+        data_transformation = DataTransformation(data_validation_artifact, data_transformation_config)
+        logging.info("Data transformation component initialized")
+
+        # Step 4: Run data transformation
+        logging.info("Starting data transformation...")
+        data_transformation_artifact = data_transformation.initiate_data_transformation()
+
+        # Step 5: Print results
+        logging.info("="*50)
+        logging.info("DATA TRANSFORMATION COMPLETED!")
+        logging.info("="*50)
+        logging.info(f"Transformed train file: {data_transformation_artifact.transformed_train_file_path}")
+        logging.info(f"Transformed test file: {data_transformation_artifact.transformed_test_file_path}")
+        logging.info(f"Transformed object: {data_transformation_artifact.transformed_object_file_path}")
+        logging.info("="*50)
+
+        print("\n" + "="*50)
+        print("DATA TRANSFORMATION COMPLETED!")
+        print("="*50)
+        print(f"Transformed train file: {data_transformation_artifact.transformed_train_file_path}")
+        print(f"Transformed test file: {data_transformation_artifact.transformed_test_file_path}")
+        print(f"Transformed object: {data_transformation_artifact.transformed_object_file_path}")
+        print("="*50)
+
+        return data_transformation_artifact
+
+    except Exception as e:
+        raise HousePredictionException(e, sys)
+
 if __name__ == "__main__":
     try:
         # Step 1: Test data ingestion
@@ -126,6 +179,13 @@ if __name__ == "__main__":
         print("="*50)
         data_validation_artifact = test_data_validation(data_ingestion_artifact)
         print("\n✓ Data validation test passed!")
+
+        # Step 3: Test data transformation
+        print("\n" + "="*50)
+        print("STEP 3: DATA TRANSFORMATION")
+        print("="*50)
+        data_transformation_artifact = test_data_transformation(data_validation_artifact)
+        print("\n✓ Data transformation test passed!")
 
         print("\n" + "="*50)
         print("ALL TESTS PASSED SUCCESSFULLY!")

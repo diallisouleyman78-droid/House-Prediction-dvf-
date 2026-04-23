@@ -1,8 +1,0 @@
-[2026-04-21 20:39:14,697] 19 root - INFO - Starting data ingestion test...
-[2026-04-21 20:39:14,697] 23 root - INFO - Training pipeline config created: house_prediction
-[2026-04-21 20:39:14,697] 27 root - INFO - Data ingestion config created
-[2026-04-21 20:39:14,697] 28 root - INFO - Database: house_prediction
-[2026-04-21 20:39:14,697] 29 root - INFO - Collection: house_data
-[2026-04-21 20:39:14,698] 30 root - INFO - Train/Test split ratio: 0.2
-[2026-04-21 20:39:14,698] 34 root - INFO - Data ingestion component initialized
-[2026-04-21 20:39:14,698] 37 root - INFO - Starting data ingestion from MongoDB...
