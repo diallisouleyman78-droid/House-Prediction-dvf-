@@ -1,11 +1,12 @@
 """
-Main script to test data ingestion, validation and transformation pipeline
+Main script to test data ingestion, validation, transformation and model training pipeline
 """
 import sys
-from house_prediction.entity.config_entity import TrainingPipelineConfig, DataIngestionConfig, DataValidationConfig, DataTransformationConfig
+from house_prediction.entity.config_entity import TrainingPipelineConfig, DataIngestionConfig, DataValidationConfig, DataTransformationConfig, ModelTrainerConfig
 from house_prediction.components.data_ingestion import DataIngestion
 from house_prediction.components.data_validation import DataValidation
 from house_prediction.components.data_transformation import DataTransformation
+from house_prediction.components.model_trainer import ModelTrainer
 from house_prediction.logging.logger import logging
 from house_prediction.exception.exception import HousePredictionException
 import numpy as np
@@ -164,6 +165,61 @@ def test_data_transformation(data_validation_artifact):
     except Exception as e:
         raise HousePredictionException(e, sys)
 
+
+def test_model_trainer(data_transformation_artifact):
+    """
+    Test the model training pipeline:
+    1. Load transformed data
+    2. Train Random Forest model
+    3. Evaluate model performance
+    4. Save trained model
+    """
+    try:
+        logging.info("Starting model training test...")
+
+        # Step 1: Create training pipeline config
+        training_pipeline_config = TrainingPipelineConfig()
+        logging.info(f"Training pipeline config created: {training_pipeline_config.pipeline_name}")
+
+        # Step 2: Create model trainer config
+        model_trainer_config = ModelTrainerConfig(training_pipeline_config)
+        logging.info(f"Model trainer config created")
+
+        # Step 3: Initialize model trainer
+        model_trainer = ModelTrainer(model_trainer_config, data_transformation_artifact)
+        logging.info("Model trainer component initialized")
+
+        # Step 4: Run model training
+        logging.info("Starting model training...")
+        model_trainer_artifact = model_trainer.initiate_model_trainer()
+
+        # Step 5: Print results
+        logging.info("="*50)
+        logging.info("MODEL TRAINING COMPLETED!")
+        logging.info("="*50)
+        logging.info(f"Trained model file: {model_trainer_artifact.trained_model_file_path}")
+        logging.info(f"Train R² Score: {model_trainer_artifact.train_metric_artifact.r2_score:.4f}")
+        logging.info(f"Test R² Score: {model_trainer_artifact.test_metric_artifact.r2_score:.4f}")
+        logging.info(f"Test RMSE: {model_trainer_artifact.test_metric_artifact.rmse:.2f}")
+        logging.info(f"Test MAE: {model_trainer_artifact.test_metric_artifact.mae:.2f}")
+        logging.info("="*50)
+
+        print("\n" + "="*50)
+        print("MODEL TRAINING COMPLETED!")
+        print("="*50)
+        print(f"Trained model file: {model_trainer_artifact.trained_model_file_path}")
+        print(f"Train R² Score: {model_trainer_artifact.train_metric_artifact.r2_score:.4f}")
+        print(f"Test R² Score: {model_trainer_artifact.test_metric_artifact.r2_score:.4f}")
+        print(f"Model Accuracy: {model_trainer_artifact.test_metric_artifact.r2_score * 100:.2f}%")
+        print(f"Test RMSE: {model_trainer_artifact.test_metric_artifact.rmse:.2f}")
+        print(f"Test MAE: {model_trainer_artifact.test_metric_artifact.mae:.2f}")
+        print("="*50)
+
+        return model_trainer_artifact
+
+    except Exception as e:
+        raise HousePredictionException(e, sys)
+
 if __name__ == "__main__":
     try:
         # Step 1: Test data ingestion
@@ -186,6 +242,13 @@ if __name__ == "__main__":
         print("="*50)
         data_transformation_artifact = test_data_transformation(data_validation_artifact)
         print("\n✓ Data transformation test passed!")
+
+        # Step 4: Test model training
+        print("\n" + "="*50)
+        print("STEP 4: MODEL TRAINING")
+        print("="*50)
+        model_trainer_artifact = test_model_trainer(data_transformation_artifact)
+        print("\n✓ Model training test passed!")
 
         print("\n" + "="*50)
         print("ALL TESTS PASSED SUCCESSFULLY!")

@@ -1,0 +1,78 @@
+[2026-04-23 13:28:01,928] 23 root - INFO - Starting data ingestion test...
+[2026-04-23 13:28:01,928] 27 root - INFO - Training pipeline config created: house_prediction
+[2026-04-23 13:28:01,928] 31 root - INFO - Data ingestion config created
+[2026-04-23 13:28:01,928] 32 root - INFO - Database: house_prediction
+[2026-04-23 13:28:01,928] 33 root - INFO - Collection: house_data
+[2026-04-23 13:28:01,928] 34 root - INFO - Train/Test split ratio: 0.2
+[2026-04-23 13:28:01,928] 38 root - INFO - Data ingestion component initialized
+[2026-04-23 13:28:01,928] 41 root - INFO - Starting data ingestion from MongoDB...
+[2026-04-23 13:28:08,808] 76 root - INFO - performed train and test split on the data
+[2026-04-23 13:28:08,817] 87 root - INFO - saved the train and test data in the ingested directory
+[2026-04-23 13:28:08,817] 46 root - INFO - ==================================================
+[2026-04-23 13:28:08,818] 47 root - INFO - DATA INGESTION COMPLETED SUCCESSFULLY!
+[2026-04-23 13:28:08,818] 48 root - INFO - ==================================================
+[2026-04-23 13:28:08,818] 49 root - INFO - Train file path: Artifact/2026_04_23_13_28_01/data_ingestion/ingested/train.csv
+[2026-04-23 13:28:08,818] 50 root - INFO - Test file path: Artifact/2026_04_23_13_28_01/data_ingestion/ingested/test.csv
+[2026-04-23 13:28:08,818] 51 root - INFO - ==================================================
+[2026-04-23 13:28:08,818] 75 root - INFO - Starting data validation test...
+[2026-04-23 13:28:08,818] 79 root - INFO - Training pipeline config created: house_prediction
+[2026-04-23 13:28:08,819] 83 root - INFO - Data validation config created
+[2026-04-23 13:28:08,826] 87 root - INFO - Data validation component initialized
+[2026-04-23 13:28:08,826] 90 root - INFO - Starting data validation...
+[2026-04-23 13:28:08,879] 94 root - INFO - ==================================================
+[2026-04-23 13:28:08,879] 95 root - INFO - DATA VALIDATION COMPLETED!
+[2026-04-23 13:28:08,879] 96 root - INFO - ==================================================
+[2026-04-23 13:28:08,879] 97 root - INFO - Validation status: True
+[2026-04-23 13:28:08,879] 98 root - INFO - Valid train file: Artifact/2026_04_23_13_28_01/data_validation/validated/train.csv
+[2026-04-23 13:28:08,879] 99 root - INFO - Valid test file: Artifact/2026_04_23_13_28_01/data_validation/validated/test.csv
+[2026-04-23 13:28:08,879] 100 root - INFO - Drift report: Artifact/2026_04_23_13_28_01/data_validation/drift_report/report.yaml
+[2026-04-23 13:28:08,879] 101 root - INFO - ==================================================
+[2026-04-23 13:28:08,880] 128 root - INFO - Starting data transformation test...
+[2026-04-23 13:28:08,880] 132 root - INFO - Training pipeline config created: house_prediction
+[2026-04-23 13:28:08,880] 136 root - INFO - Data transformation config created
+[2026-04-23 13:28:08,880] 140 root - INFO - Data transformation component initialized
+[2026-04-23 13:28:08,880] 143 root - INFO - Starting data transformation...
+[2026-04-23 13:28:08,880] 168 root - INFO - Initiating data transformation
+[2026-04-23 13:28:08,880] 170 root - INFO - Reading validated train and test data
+[2026-04-23 13:28:08,887] 174 root - INFO - Cleaning data
+[2026-04-23 13:28:08,909] 178 root - INFO - Applying feature engineering
+[2026-04-23 13:28:08,925] 182 root - INFO - Applying target encoding
+[2026-04-23 13:28:08,935] 202 root - INFO - Fitting and transforming data
+[2026-04-23 13:28:08,935] 157 root - INFO - Creating data transformer pipeline
+[2026-04-23 13:28:08,935] 162 root - INFO - Data transformer pipeline created
+[2026-04-23 13:28:08,946] 213 root - INFO - Saving transformed data and preprocessor object
+[2026-04-23 13:28:08,947] 77 root - INFO - Object saved to file: Artifact/2026_04_23_13_28_01/data_transformation/transformed_object/transformer.pkl
+[2026-04-23 13:28:08,947] 77 root - INFO - Object saved to file: final_model/preprocessor.pkl
+[2026-04-23 13:28:08,947] 229 root - INFO - Data transformation completed successfully
+[2026-04-23 13:28:08,948] 147 root - INFO - ==================================================
+[2026-04-23 13:28:08,948] 148 root - INFO - DATA TRANSFORMATION COMPLETED!
+[2026-04-23 13:28:08,948] 149 root - INFO - ==================================================
+[2026-04-23 13:28:08,948] 150 root - INFO - Transformed train file: Artifact/2026_04_23_13_28_01/data_transformation/transformed/train.npy
+[2026-04-23 13:28:08,948] 151 root - INFO - Transformed test file: Artifact/2026_04_23_13_28_01/data_transformation/transformed/test.npy
+[2026-04-23 13:28:08,948] 152 root - INFO - Transformed object: Artifact/2026_04_23_13_28_01/data_transformation/transformed_object/transformer.pkl
+[2026-04-23 13:28:08,948] 153 root - INFO - ==================================================
+[2026-04-23 13:28:08,948] 178 root - INFO - Starting model training test...
+[2026-04-23 13:28:08,948] 182 root - INFO - Training pipeline config created: house_prediction
+[2026-04-23 13:28:08,948] 186 root - INFO - Model trainer config created
+[2026-04-23 13:28:08,948] 190 root - INFO - Model trainer component initialized
+[2026-04-23 13:28:08,948] 193 root - INFO - Starting model training...
+[2026-04-23 13:28:08,948] 89 root - INFO - Initiating model training
+[2026-04-23 13:28:08,949] 106 root - INFO - Train shape: (793, 19), Test shape: (197, 19)
+[2026-04-23 13:28:08,949] 28 root - INFO - Training Random Forest model...
+[2026-04-23 13:28:09,229] 41 root - INFO - Model training completed
+[2026-04-23 13:28:09,299] 51 root - INFO - Train R² Score: 0.9611
+[2026-04-23 13:28:09,300] 52 root - INFO - Test R² Score: 0.5825
+[2026-04-23 13:28:09,300] 53 root - INFO - Model Accuracy: 58.25%
+[2026-04-23 13:28:09,307] 77 root - INFO - Object saved to file: Artifact/2026_04_23_13_28_01/model_trainer/trained_model/model.pkl
+[2026-04-23 13:28:09,312] 77 root - INFO - Object saved to file: final_model/model.pkl
+[2026-04-23 13:28:09,312] 70 root - INFO - Model saved to: Artifact/2026_04_23_13_28_01/model_trainer/trained_model/model.pkl
+[2026-04-23 13:28:09,312] 111 root - INFO - Model training completed successfully
+[2026-04-23 13:28:09,312] 197 root - INFO - ==================================================
+[2026-04-23 13:28:09,312] 198 root - INFO - MODEL TRAINING COMPLETED!
+[2026-04-23 13:28:09,312] 199 root - INFO - ==================================================
+[2026-04-23 13:28:09,312] 200 root - INFO - Trained model file: Artifact/2026_04_23_13_28_01/model_trainer/trained_model/model.pkl
+[2026-04-23 13:28:09,312] 201 root - INFO - Train R² Score: 0.9611
+[2026-04-23 13:28:09,312] 202 root - INFO - Test R² Score: 0.5825
+[2026-04-23 13:28:09,312] 203 root - INFO - Test RMSE: 11596275.27
+[2026-04-23 13:28:09,313] 204 root - INFO - Test MAE: 8052815.96
+[2026-04-23 13:28:09,313] 205 root - INFO - ==================================================
