@@ -1,11 +1,18 @@
 # House Price Prediction System
 
-A machine learning project for predicting French real estate prices with 82% accuracy. This system helps investors identify good, fair, or bad investment opportunities by comparing listing prices against predicted fair market values.
+A modular machine learning pipeline for predicting French real estate prices with 82% accuracy. This system helps investors identify good, fair, or bad investment opportunities by comparing listing prices against predicted fair market values.
 
 ## 🎯 Project Overview
 
-This project uses historical French property transaction data to train a Random Forest regression model that predicts house prices based on location, size, rooms, and other features. The model can be used to:
+This project uses historical French property transaction data to train a Random Forest regression model that predicts house prices based on location, size, rooms, and other features. The system features a production-ready ML pipeline with:
 
+- **Modular Architecture**: Separate components for data ingestion, validation, and transformation
+- **Data Validation**: Schema validation and drift detection
+- **Feature Engineering**: 19 engineered features including target encoding and interaction terms
+- **MongoDB Integration**: Scalable data storage and retrieval
+- **Production Pipeline**: Automated end-to-end ML pipeline
+
+The model can be used to:
 - **Predict fair market value** of properties
 - **Identify undervalued properties** (good investment opportunities)
 - **Detect overpriced listings** (avoid bad investments)
@@ -24,21 +31,33 @@ This project uses historical French property transaction data to train a Random 
 house-prediction/
 ├── house_prediction/          # Main package
 │   ├── __init__.py
-│   ├── pipeline/              # ML pipeline components
-│   ├── components/            # Data processing components
-│   ├── cloud/                 # Cloud integration (MLflow, DagsHub)
+│   ├── components/            # Pipeline components
+│   │   ├── data_ingestion.py      # MongoDB data ingestion
+│   │   ├── data_validation.py      # Data validation & drift detection
+│   │   └── data_transformation.py  # Feature engineering & preprocessing
+│   ├── entity/                # Data classes for configs & artifacts
+│   │   ├── config_entity.py       # Configuration entities
+│   │   └── artifact_entity.py      # Pipeline artifacts
 │   ├── constants/             # Configuration constants
+│   │   └── training_pipeline/      # Pipeline constants
 │   ├── data_schema/           # Data validation schemas
+│   │   └── schema.yaml            # Data schema definition
 │   ├── exception/             # Custom exceptions
+│   │   └── exception.py
 │   ├── logging/               # Logging configuration
+│   │   └── logger.py
 │   └── utils/                 # Utility functions
+│       └── main_utils/
+│           └── utils.py          # YAML, numpy, pickle utilities
 ├── notebooks/                 # Jupyter notebooks
 │   └── test.ipynb            # Model training and evaluation
 ├── house_data/                # Raw data storage
-├── valid_data/                # Validation data
-├── prediction_output/         # Model predictions
-├── templates/                 # HTML templates (if web app)
-├── filtered_data.csv          # Main dataset (650K+ records)
+│   └── filtered_data.csv      # Main dataset (650K+ records)
+├── Artifact/                  # Pipeline artifacts (auto-generated)
+├── final_model/               # Trained models & preprocessors
+├── logs/                      # Application logs
+├── main.py                    # Pipeline testing script
+├── push_data.py               # MongoDB data upload script
 ├── requirements.txt           # Python dependencies
 ├── setup.py                   # Package setup
 ├── Dockerfile                 # Docker configuration
@@ -48,14 +67,38 @@ house-prediction/
 
 ## 🚀 Features
 
-### Data Processing
-- **Data Cleaning**: Handle missing values, remove outliers, clean price formats
-- **Feature Engineering**: 18+ engineered features including:
+### Pipeline Components
+
+**1. Data Ingestion**
+- Fetch data from MongoDB
+- Export to feature store
+- Train/test split (80/20)
+- Batch processing for large datasets
+
+**2. Data Validation**
+- Schema validation (column count, data types)
+- Numerical column validation
+- Data drift detection using Kolmogorov-Smirnov test
+- Drift report generation (YAML)
+
+**3. Data Transformation**
+- Data cleaning (price formatting, outlier removal)
+- Feature engineering (19 engineered features):
   - Location-based features (commune/department average prices)
   - Property characteristics (size, rooms, land ratio)
   - Interaction features (size × property type)
   - Non-linear features (squared transformations)
   - Temporal features (month, season)
+- Target encoding (train-based, no data leakage)
+- Scaling and imputation (StandardScaler + SimpleImputer)
+- Save transformed data as numpy arrays
+
+### Data Processing
+- **Data Cleaning**: Handle missing values, remove outliers, clean price formats
+- **Feature Engineering**: 19 engineered features including target encoding
+- **Target Encoding**: Commune and department average prices (calculated on train set)
+- **Data Validation**: Schema validation and drift detection
+- **Preprocessing**: Scaling and imputation pipeline
 
 ### Machine Learning
 - **Model**: Random Forest Regressor
@@ -117,6 +160,35 @@ The project uses French real estate transaction data (`filtered_data.csv`) with:
 
 ## 🔧 Usage
 
+### Setup MongoDB Connection
+
+1. Create a `.env` file in the project root:
+```bash
+MONGO_DB_URL=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/?appName=<appname>
+```
+
+2. Upload data to MongoDB:
+```bash
+python push_data.py
+```
+
+This will upload `filtered_data.csv` to MongoDB in batches.
+
+### Running the Pipeline
+
+Test the complete pipeline:
+
+```bash
+python main.py
+```
+
+This will run:
+1. **Data Ingestion**: Fetch data from MongoDB, split train/test
+2. **Data Validation**: Validate schema, check drift
+3. **Data Transformation**: Clean, feature engineer, scale data
+
+The pipeline creates artifacts in the `Artifact/` directory with timestamps.
+
 ### Training the Model
 
 Run the training notebook:
@@ -127,7 +199,7 @@ jupyter notebook notebooks/test.ipynb
 
 The notebook includes:
 1. Data loading and cleaning
-2. Feature engineering (18+ features)
+2. Feature engineering (19 features)
 3. Train/test split
 4. Model training (Random Forest)
 5. Performance evaluation
@@ -188,29 +260,56 @@ else:
 
 ## 📈 Model Features
 
-### Top Predictive Features
-1. **commune_avg_price** - Average price in the commune
-2. **Surface reelle bati** - Built surface area
-3. **dept_avg_price** - Average price in the department
-4. **commune_price_rank** - Relative price position
+### Training Features (19 total)
+1. **Surface reelle bati** - Built surface area
+2. **Nombre pieces principales** - Number of rooms
+3. **Surface terrain** - Land surface area
+4. **land_ratio** - Land to built surface ratio
 5. **total_surface** - Total property surface
+6. **room_density** - Rooms per square meter
+7. **is_house** - Binary: 1 for Maison, 0 for Appartement
+8. **is_large** - Binary: 1 if >150m²
+9. **is_small** - Binary: 1 if <60m²
+10. **month** - Month of sale
+11. **season** - Season of sale (Winter/Spring/Summer/Fall)
+12. **Code departement** - Department code
+13. **commune_avg_price** - Average price in commune (target encoded)
+14. **dept_avg_price** - Average price in department (target encoded)
+15. **commune_price_rank** - Relative price position
+16. **size_x_house** - Interaction: size × property type
+17. **rooms_x_house** - Interaction: rooms × property type
+18. **dept_squared** - Department code squared (non-linear)
+19. **surface_squared** - Built surface squared (non-linear)
 
 ### Engineered Features
-- **Location-based**: Commune/department average prices, price ranks
+- **Location-based**: Commune/department average prices (target encoding), price ranks
 - **Property characteristics**: Land ratio, room density, size categories
 - **Interaction features**: Size × property type, rooms × property type
 - **Non-linear features**: Squared transformations for complex relationships
 - **Temporal features**: Month, season of sale
+- **Target Encoding**: Calculated on train set to prevent data leakage
 
 ## 🔮 Future Enhancements
 
+### Completed Features ✅
+- [x] **Modular Pipeline Architecture**: Data ingestion, validation, transformation components
+- [x] **MongoDB Integration**: Scalable data storage and retrieval
+- [x] **Data Validation**: Schema validation and drift detection
+- [x] **Feature Engineering**: 19 engineered features with target encoding
+- [x] **Data Preprocessing**: Scaling and imputation pipeline
+- [x] **Custom Exception Handling**: Structured error handling with logging
+- [x] **Artifact Management**: Timestamped pipeline artifacts
+
 ### Planned Features
+- [ ] **Model Training Component**: Automated model training pipeline
+- [ ] **Model Evaluation Component**: Comprehensive model evaluation metrics
+- [ ] **Model Trainer**: Train and save Random Forest model
 - [ ] **Property Condition Data**: Age, renovation status, condition scores
 - [ ] **Neighborhood Quality**: School ratings, crime rates, amenities
 - [ ] **Rental Yield**: Calculate potential rental income and ROI
 - [ ] **Market Timing**: Interest rates, price trends, economic indicators
 - [ ] **Web Interface**: FastAPI-based prediction API
-- [ ] **Real-time Updates**: Automated model retraining
+- [ ] **Real-time Updates**: Automated model retraining based on drift
 - [ ] **Geospatial Analysis**: Map-based visualizations
 
 ### Data Sources to Integrate
