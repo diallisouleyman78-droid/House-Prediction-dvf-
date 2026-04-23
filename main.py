@@ -39,8 +39,8 @@ def test_data_ingestion():
 
         # Step 4: Run data ingestion
         logging.info("Starting data ingestion from MongoDB...")
-        # Use limit=1000 for testing, remove limit=None for production
-        data_ingestion_artifact = data_ingestion.initiate_data_ingestion(limit=1000)
+        # Use limit=10000 for testing, remove limit=None for production
+        data_ingestion_artifact = data_ingestion.initiate_data_ingestion(limit=10000)
 
         # Step 5: Print results
         logging.info("="*50)
