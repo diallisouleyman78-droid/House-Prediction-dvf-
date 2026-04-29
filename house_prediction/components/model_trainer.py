@@ -11,12 +11,57 @@ from house_prediction.utils.main_utils.utils import save_object, load_object, lo
 from house_prediction.utils.ml_utils.model.estimator import HouseModel
 from house_prediction.utils.ml_utils.metric.metric import calculate_regression_metrics
 
+import dagshub
+dagshub.init(repo_owner='diallisouleyman78', repo_name='House-Prediction-dvf-', mlflow=True)
+
+# Optional MLflow import
+try:
+    import mlflow
+    import mlflow.sklearn
+    import mlflow.data
+    MLFLOW_AVAILABLE = True
+    logging.info("MLflow imported successfully")
+except ImportError as e:
+    MLFLOW_AVAILABLE = False
+    logging.warning(f"MLflow not installed. MLflow tracking will be disabled. Error: {e}")
+
 
 class ModelTrainer:
     def __init__(self, model_trainer_config: ModelTrainerConfig, data_transformation_artifact: DataTransformationArtifact):
         try:
             self.model_trainer_config = model_trainer_config
             self.data_transformation_artifact = data_transformation_artifact
+        except Exception as e:
+            raise HousePredictionException(e, sys) from e
+
+    def track_mlflow(self, best_model, regression_metric, run_name="train"):
+        """
+        Track model training with MLflow for regression
+        Logs model type, metrics, and model artifact
+        """
+        try:
+            if not MLFLOW_AVAILABLE:
+                logging.warning("MLflow not available. Skipping MLflow tracking.")
+                return
+
+            logging.info(f"Starting MLflow tracking for {run_name}...")
+
+            # Set experiment
+            mlflow.set_experiment(experiment_name="regression")
+
+            with mlflow.start_run(run_name=f"model_training_{run_name}"):
+                mlflow.log_param("model_type", best_model.__class__.__name__)
+
+                # Regression metrics
+                mlflow.log_metric("r2_score", regression_metric.r2_score)
+                mlflow.log_metric("adj_r2_score", regression_metric.adj_r2_score)
+                mlflow.log_metric("rmse", regression_metric.rmse)
+                mlflow.log_metric("mae", regression_metric.mae)
+
+                mlflow.sklearn.log_model(best_model, "model")
+
+                logging.info(f"MLflow tracking completed for {run_name}")
+
         except Exception as e:
             raise HousePredictionException(e, sys) from e
 
@@ -51,6 +96,10 @@ class ModelTrainer:
             logging.info(f"Train R² Score: {train_metric.r2_score:.4f}")
             logging.info(f"Test R² Score: {test_metric.r2_score:.4f}")
             logging.info(f"Model Accuracy: {test_metric.r2_score * 100:.2f}%")
+
+            # Track with MLflow
+            self.track_mlflow(model, train_metric, run_name="train")
+            self.track_mlflow(model, test_metric, run_name="test")
 
             # Load preprocessor
             preprocessor = load_object(self.data_transformation_artifact.transformed_object_file_path)
